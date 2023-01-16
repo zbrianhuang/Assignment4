@@ -1,17 +1,13 @@
-import java.nio.file.FileAlreadyExistsException;
-import java.util.Calendar;
-import java.util.Random;
 
-import javax.swing.DefaultRowSorter;
-import javax.swing.text.AbstractDocument.DefaultDocumentEvent;
-public class Sorting {
-    int[] in;
-    public Sorting(int[]in){
-        this.in = in;
-    }
-    public  long bubbleSort(){
-        Calendar c = Calendar.getInstance();
-        long startTime = System.currentTimeMillis();
+import java.util.Random;
+import java.lang.Thread;
+import java.util.Calendar;
+public class ThreadRunner extends Thread{
+    int selectedSortMethod;
+    int[]arr;
+    long startTime,endTime;
+    public long bubbleSort(int[] in){
+        long bubbleStartTime = System.currentTimeMillis();
         boolean sorted = false;
         int temp;
         for(int i= 1;i<in.length&&!sorted; i++){
@@ -27,14 +23,12 @@ public class Sorting {
             } 
 
         } 
+        long bubbleEndTime = System.currentTimeMillis();
+        long bubbleFinalTime = bubbleEndTime-bubbleStartTime;
+        return bubbleFinalTime;
         
-        Calendar c2 = Calendar.getInstance();
-        long endTime = System.currentTimeMillis();
-        return endTime-startTime;
     }
-    public long insertionSort(int[]arr){
-        Calendar c = Calendar.getInstance();
-        long startTime = c.getTimeInMillis();
+    public void insertionSort(int[]arr){
         
         for(int unsorted = 1;unsorted<arr.length;unsorted++){
             int NextItem = arr[unsorted];
@@ -45,13 +39,8 @@ public class Sorting {
             }
             arr[Loc]=NextItem;
         }
-        Calendar c2 = Calendar.getInstance();
-        long endTime = c2.getTimeInMillis();
-        return endTime-startTime;
     }
-    public  long selectionSort(int[]arr){
-        Calendar c = Calendar.getInstance();
-        long startTime = c.getTimeInMillis();
+    public void selectionSort(int[]arr){
         
         for(int i= 0;i<arr.length-1;i++){
             int minIndex = i;
@@ -66,19 +55,14 @@ public class Sorting {
             arr[i] = arr[minIndex];
             arr[minIndex]=temp;
         }
-        Calendar c2 = Calendar.getInstance();
-        long endTime = c2.getTimeInMillis();
-        return endTime-startTime;
+        
     }
-    public  long MergeSort(int Ar[],int first, int last){
-        Calendar c = Calendar.getInstance();
-        long startTime = c.getTimeInMillis();
+    public void MergeSort(int Ar[],int first, int last){
+        
         MergeSortR(Ar,first,last);
-        Calendar c2 = Calendar.getInstance();
-        long endTime = c2.getTimeInMillis();
-        return endTime-startTime;
+        
     }
-    public  void MergeSortR(int Ar[],int first, int last){
+    public void MergeSortR(int Ar[],int first, int last){
         
         if(first<last){
             int mid = (first+last)/2;
@@ -111,9 +95,31 @@ public class Sorting {
             }
         }
     }
-    public  void printArray(){
-        for(int i:in){
-            System.out.println(i);
+    public ThreadRunner (int in,int[]arr){
+        selectedSortMethod= in;
+        this.arr = arr;
+        
+    }
+    public void run(){
+        startTime = System.currentTimeMillis();
+        
+        
+        System.out.println(bubbleSort(arr)+"ms");
+        endTime = System.currentTimeMillis();
+        System.out.println(printString());
+    }
+    public String printString(){
+        long finalTime = endTime-startTime;
+        String builder = "Printing: "+Thread.currentThread()+" ";
+        builder+="\ncompleted in: "+finalTime+"ms";
+        return builder;
+    }
+    public String printArr(){
+        String builder="";
+        for(int i:arr){
+            builder+=i;
+            builder+=" ";
         }
+        return builder;
     }
 }
